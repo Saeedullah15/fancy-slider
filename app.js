@@ -13,6 +13,13 @@ let sliders = [];
 // to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
+// updating search box by enter
+document.getElementById("search").addEventListener("keyup", function(event) {
+  if (event.key === "Enter") {
+    document.getElementById("search-btn").click();
+  }
+});
+
 // show images 
 const showImages = (images) => {
   imagesArea.style.display = 'block';
@@ -25,10 +32,11 @@ const showImages = (images) => {
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div)
   })
-
+  toggleSpinner();
 }
 
 const getImages = (query) => {
+  toggleSpinner();
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
@@ -65,7 +73,7 @@ const createSlider = () => {
 
   sliderContainer.appendChild(prevNext)
   document.querySelector('.main').style.display = 'block';
-  // hide image aria
+  // hide image area
   imagesArea.style.display = 'none';
   const duration = document.getElementById('duration').value || 1000;
   sliders.forEach(slide => {
@@ -103,7 +111,7 @@ const changeSlide = (index) => {
   }
 
   items.forEach(item => {
-    item.style.display = "none"
+    item.style.display = "block"
   })
 
   items[index].style.display = "block"
@@ -120,3 +128,9 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+
+// spinner
+const toggleSpinner = () => {
+  const spinner = document.getElementById("spinner");
+  spinner.classList.toggle("d-none");
+}
